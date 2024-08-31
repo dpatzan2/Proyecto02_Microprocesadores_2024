@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <gmp.h>
-#include <omp.h>
+#include <time.h>  
 #include <string.h>
 #include <stdlib.h>
-#include <time.h> 
 
 void calcular_digitos_pi(int n);
 void explicar_serie_chudnovsky();
@@ -61,7 +60,7 @@ void calcular_digitos_pi(int n) {
     int k, limite;
     mpf_set_default_prec(n * 3.32 + 50);  // Ajuste de la precisión en bits
 
-    mpf_t pi, sumatoria, constante;
+    mpf_t pi, sumatoria, constante, termino;
     mpf_init(pi);
     mpf_init(sumatoria);
     mpf_set_ui(sumatoria, 0);
@@ -72,36 +71,12 @@ void calcular_digitos_pi(int n) {
 
     limite = n / 14 + 1;
 
-    int num_threads;
-    #pragma omp parallel
-    {
-        num_threads = omp_get_num_threads();
-    }
+    mpf_init(termino);
 
-    mpf_t sumatorias[num_threads];
-    for (int i = 0; i < num_threads; i++) {
-        mpf_init(sumatorias[i]);
-        mpf_set_ui(sumatorias[i], 0);
-    }
-
-    #pragma omp parallel private(k)
-    {
-        int thread_id = omp_get_thread_num();
-        mpf_t termino;
-        mpf_init(termino);
-
-        #pragma omp for
-        for (k = 0; k < limite; k++) {
-            calcular_termino(k, termino);
-            mpf_add(sumatorias[thread_id], sumatorias[thread_id], termino);
-        }
-
-        mpf_clear(termino);
-    }
-
-    for (int i = 0; i < num_threads; i++) {
-        mpf_add(sumatoria, sumatoria, sumatorias[i]);
-        mpf_clear(sumatorias[i]);
+    // Calcular la sumatoria de la serie de Chudnovsky
+    for (k = 0; k < limite; k++) {
+        calcular_termino(k, termino);
+        mpf_add(sumatoria, sumatoria, termino);
     }
 
     mpf_div(pi, constante, sumatoria);
@@ -119,9 +94,11 @@ void calcular_digitos_pi(int n) {
     gmp_printf("Valor de pi calculado con precision de %d digitos: %.*Ff\n", n, n, pi);
     printf("Precision alcanzada: %d digitos correctos\n", digitos_correctos);
 
+    // Liberar memoria
     mpf_clear(pi);
     mpf_clear(sumatoria);
     mpf_clear(constante);
+    mpf_clear(termino);
     free(pi_str);
 }
 
