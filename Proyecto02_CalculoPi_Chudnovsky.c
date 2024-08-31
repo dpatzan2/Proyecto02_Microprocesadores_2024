@@ -3,6 +3,7 @@
 #include <omp.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h> 
 
 void calcular_digitos_pi(int n);
 void explicar_serie_chudnovsky();
@@ -25,7 +26,17 @@ int main() {
                 printf("Ingrese el numero de digitos a calcular: ");
                 scanf("%d", &num_digitos);
                 if (num_digitos > 0) {
+                    // Medir el tiempo de inicio
+                    clock_t inicio = clock();
+                    
                     calcular_digitos_pi(num_digitos);
+                    
+                    // Medir el tiempo de fin
+                    clock_t fin = clock();
+                    
+                    // Calcular el tiempo transcurrido
+                    double tiempo_transcurrido = (double)(fin - inicio) / CLOCKS_PER_SEC;
+                    printf("Tiempo de ejecucion: %.2f segundos\n", tiempo_transcurrido);
                 } else {
                     printf("Por favor, ingrese un numero positivo.\n");
                 }
