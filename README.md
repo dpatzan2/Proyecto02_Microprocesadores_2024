@@ -98,7 +98,6 @@
      ```sh
      gcc -o Proyecto02_CalculoPi_Chudnovsky Proyecto02_CalculoPi_Chudnovsky.c -lgmp -fopenmp
      ```
-   - Asegúrate de ajustar las rutas (`-I` para incluir y `-L` para enlazar) según tu arquitectura (64 o 32 bits).
 
 2. **Ejecutar el Programa**
    - Ejecuta el programa compilado:
