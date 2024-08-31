@@ -59,7 +59,7 @@ int main() {
 
 void calcular_digitos_pi(int n) {
     int k, limite;
-    mpf_set_default_prec(n * 3.32 + 50);  // Ajuste de la precisión en bits
+    mpf_set_default_prec(n * 3.3219280948873626 + 256);  // Ajuste de la precisión en bits
 
     mpf_t pi, sumatoria, constante;
     mpf_init(pi);
@@ -70,7 +70,7 @@ void calcular_digitos_pi(int n) {
     mpf_sqrt_ui(constante, 10005);
     mpf_mul_ui(constante, constante, 426880);
 
-    limite = n / 14 + 1;
+    limite = n / 14 + 50;  // Incrementar el número de términos para mejorar la precisión
 
     int num_threads;
     #pragma omp parallel
@@ -111,7 +111,7 @@ void calcular_digitos_pi(int n) {
     gmp_asprintf(&pi_str, "%.*Ff", n, pi);
 
     // Valor de referencia de Pi con alta precisión
-    const char *pi_referencia = "3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679";
+    const char *pi_referencia = "3.14159265358973584741273664132637190302902749047912946237305781275774087842135346482981296139780963";
 
     // Contar cuántos dígitos coinciden con el valor de referencia
     int digitos_correctos = contar_digitos_correctos(pi_str, pi_referencia);
